@@ -1,0 +1,287 @@
+<head> <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4CAF50">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Materiais SAP - Cebrace</title>
+<style>
+  body, html {
+    margin:0;
+    padding:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:#f0f4f8;
+  }
+  * { box-sizing:border-box; }
+
+  header {
+    background: linear-gradient(90deg,#227777,#2d6fe9);
+    color:#ffffff;
+    text-align:center;
+    padding:25px 0;
+    font-size:2em;
+    font-weight:bold;
+    letter-spacing:1px;
+    box-shadow:0 4px 10px rgb(255, 255, 255);
+    animation: headerFade 1s ease-in-out;
+  }
+  @keyframes headerFade { from{opacity:0} to{opacity:1} }
+
+  .search-container {
+    display:flex;
+    justify-content:center;
+    margin:20px;
+  }
+  input[type="text"] {
+    width:70%;
+    padding:12px 20px;
+    font-size:1em;
+    border:2px solid #ffffff;
+    border-radius:10px;
+    outline:none;
+    transition:0.3s;
+  }
+  input[type="text"]:focus { box-shadow:0 0 15px rgba(0,183,215,0.6); }
+
+  .main-container {
+    display:flex;
+    gap:20px;
+    padding:0 30px 50px;
+    align-items: flex-start;
+  }
+
+  .left-panel {
+    flex: 3;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .right-panel {
+    flex: 1;
+    max-height: 80vh;
+    overflow-y: auto;
+    background:#ff9102;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgb(255, 255, 255);
+  }
+
+  .materials-container {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+  }
+
+  .card {
+    background:#ffffff;
+    border-radius:15px;
+    padding:15px;
+    box-shadow:0 4px 15px rgb(255, 254, 254);
+    transition: transform 0.4s, box-shadow 0.4s;
+    cursor:pointer;
+    position:relative;
+    display:flex;
+    flex-direction: column;
+    gap:5px;
+  }
+  .card:hover {
+    transform: translateY(-5px) rotateZ(1deg);
+    box-shadow:0 12px 25px rgb(255, 255, 255);
+  }
+
+  .categoria { font-weight:bold; color:#005f6b; font-size:0.95em; display:flex; align-items:center; gap:5px; }
+  .descricao { font-size:1em; margin:5px 0; color:#333; font-weight:600; display:flex; align-items:center; gap:5px; }
+  .codigo, .embalagem { font-size:0.9em; color:#666; }
+
+  .quant-container { margin-top:10px; display:flex; gap:10px; align-items:center; }
+  .quant-container input { width:60px; padding:5px; border:1px solid #ccc; border-radius:5px; text-align:center; transition:0.3s; }
+  .quant-container input:focus { border-color:#fdffff; box-shadow:0 0 8px rgba(0,183,215,0.4); }
+  .quant-container button {
+    padding:5px 10px; border:none; border-radius:5px;
+    background:#00b7d7; color:#fff; cursor:pointer;
+    transition:0.3s;
+  }
+  .quant-container button:hover { background:#005f6b; transform: scale(1.1); }
+
+  .cart-item {
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;
+    padding:10px; border-radius:10px; background:linear-gradient(90deg,#e0f7fa,#ffffff);
+    transition:0.4s;
+  }
+  .cart-item:hover { transform: scale(1.02); box-shadow:0 4px 15px rgba(0,0,0,0.2); }
+  .cart-item button { padding:3px 8px; border:none; border-radius:5px; background:#ff4d4d; color:#fff; cursor:pointer; transition:0.3s; }
+  .cart-item button:hover { background:#c00000; transform: scale(1.1); }
+
+  .fadeIn { animation: fadeIn 0.5s ease-in-out; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  svg { width:16px; height:16px; vertical-align:middle; }
+</style>
+</head>
+<body>
+
+<header>Lista de Materiais SAP </header>
+
+<div class="search-container">
+  <input type="text" id="searchBox" placeholder="Buscar material ou código...">
+</div>
+
+<div class="main-container">
+  <div class="left-panel">
+    <div class="materials-container" id="materialsContainer"></div>
+  </div>
+
+  <div class="right-panel">
+    <h2>Itens Selecionados</h2>
+    <div id="cartItems"></div>
+    <button id="copyCodes" style="margin-top:10px;padding:10px 20px;border:none;border-radius:8px;background:#00b7d7;color:#fff;cursor:pointer; transition:0.3s;">📋 Copiar Códigos</button>
+  </div>
+</div>
+
+<script>
+const materials = [
+  { categoria: "COPA", descricao: "COPO DESCARTÁVEL CAFÉ 50ML", codigo: "30023432", embalagem: "CT" },
+  { categoria: "COPA", descricao: "COPO DESCARTÁVEL ÁGUA 180ML", codigo: "30023433", embalagem: "CT" },
+  { categoria: "COPA", descricao: "ESPÁTULA DESCARTÁVEL P/ CAFÉ", codigo: "30005863", embalagem: "MI" },
+ { categoria: "COPA", descricao: "AÇUCAR REFINADO 1KG", codigo: "30027525", embalagem: "KG" },
+  { categoria: "COPA", descricao: "AGUA MINERAL C/ GÁS 350ML", codigo: "30014282", embalagem: "FARDINHO 12UN" },
+  { categoria: "COPA", descricao: "FILTRO DE PAPEL MELITA Nº103", codigo: "30014270", embalagem: "PC" },
+  { categoria: "COPA", descricao: "FILTRO DE PAPEL MELITA Nº4", codigo: "30027642", embalagem: "PC" },
+  { categoria: "COPA", descricao: "PÓ DE CAFÉ PILÃO 500G", codigo: "30027643", embalagem: "PC" },
+  {categoria: "LIMPEZA", descricao: "ÁGUA SANITÁRIA", codigo: "30014041", embalagem: "L" },
+  { categoria: "LIMPEZA", descricao: "ALCOOL 70° 1L", codigo: "30063218", embalagem: "UN" },
+  { categoria: "LIMPEZA", descricao: "ALCOOL EM GEL 500ML", codigo: "30063046", embalagem: "UN" },
+  { categoria: "LIMPEZA", descricao: "BOMBRIL 8 UNIDADES", codigo: "30014040", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "DESINFETANTE PINHO SOL", codigo: "30014044", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "DESINFETANTE PINHO SOL LAVANDA", codigo: "30005569", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "DETERGENTE LÍQUIDO LIMPOL 500ML", codigo: "30027647", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "LIMPA VIDRO VIDREX", codigo: "30014052", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "PANO LAVAD ALVEJ 35X35CMALGODAO", codigo: "30005562", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "ALCOOL ANTI SEPTICO ESPUMA 600ML", codigo: "30065430", embalagem: "UN" },
+ { categoria: "LIMPEZA", descricao: "PAPEL TOALH RL SIMP 20CMX200M8UN", codigo: "30018637", embalagem: "RL" },
+  { categoria: "LIMPEZA", descricao: "PAPEL HIGIENICO INTERF FOLHA DUPLA 7116", codigo: "30005576", embalagem: "RL" },
+  { categoria: "LIMPEZA", descricao: "SABONETE ERVA DOCE 90G", codigo: "30078527", embalagem: "UN" },
+  { categoria: "LIMPEZA", descricao: "SABONETE OASIS 90G", codigo: "30081778", embalagem: "UN" },
+  { categoria: "LIMPEZA", descricao: "DETERGENTE NEUTRO 500ML", codigo: "30007890", embalagem: "FR" },
+  { categoria: "LIMPEZA", descricao: "AGUA SANITÁRIA 1L", codigo: "30007891", embalagem: "FR" },
+  { categoria: "LIMPEZA", descricao: "LIMPA VIDROS 500ML", codigo: "30007892", embalagem: "FR" },
+  { categoria: "LIMPEZA", descricao: "PANO DE LIMPEZA ALGODÃO 35X35CM", codigo: "30005562", embalagem: "PC" },
+  { categoria: "LIMPEZA", descricao: "LIXO PRETO 60L", codigo: "30078697", embalagem: "RL" },
+  { categoria: "LIMPEZA", descricao: "LIXO AZUL 100L", codigo: "30005585", embalagem: "RL" },
+  { categoria: "COPA", descricao: "FITA ADESIVA TRANSPARENTE 45MM", codigo: "30004444", embalagem: "RL" },
+ { categoria: "LIMPEZA", descricao: "SOLIDIUM EM PÓ 500G", codigo: "30014046", embalagem: "RL" },
+  { categoria: "EPI", descricao: "BOTINA SEG ELETR NOB MR BIQCOMP Nº35", codigo: "30054021", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "CAPACETE ABA FRONTAL BR CATRACA JUGULAR", codigo: "30024209", embalagem: "PC" },
+  { categoria: "EPI", descricao: "CAPUZ BONE C/ CASQ ALG AZ CURV", codigo: "30056589", embalagem: "PC" },
+  { categoria: "EPI", descricao: "CARTUCHO 3M VAPOR ORGANICO/GAS ACIDO", codigo: "30005418", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "COLETE SEG AM-LIM FL M C/ FAIXA REFL DUP (Com ziper)", codigo: "30053969", embalagem: "UN" },
+  { categoria: "EPI", descricao: "COLETE SEG LJ FL M C/ FAIXA REFL DUP (Com ziper)", codigo: "30053985", embalagem: "UN" },
+  { categoria: "EPI", descricao: "COLETE FAIXAS REFLETIVAS AMARELO LIMAO", codigo: "30020913", embalagem: "UN" },
+  { categoria: "EPI", descricao: "FILTRO AMONIA/METIL CL1 3M 6004", codigo: "30060218", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "LUVA MECANICA 9 ANSELL HYFLEX 11600", codigo: "30034308", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "LUVA SEG ANTICORTE KEV 390MM P15CM 10", codigo: "30055525", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "LUVA SEG ANTICORTE PEAD LO 8", codigo: "30058343", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "LUVA VAQUETA", codigo: "30005343", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "LUVA LATEX 208 TAM. 9 COR LARANJA", codigo: "30013906", embalagem: "PAR" },
+  { categoria: "EPI", descricao: "MACACAO PES MASC RIPSTOP AZM CURT G", codigo: "30063854", embalagem: "PC" },
+  { categoria: "EPI", descricao: "MACACAO PROT G TYCHEM SL DUPONT tyvek", codigo: "30013988", embalagem: "PC" },
+  { categoria: "EPI", descricao: "MASCARA FACIAL G PANORAMA 3M", codigo: "30033456", embalagem: "PC" },
+ { categoria: "EPI", descricao: "OCULOS SEG SOBREPOR INCOLUVEX S0112C", codigo: "30025235", embalagem: "PC" },
+ { categoria: "EPI", descricao: "OCULOS;MILLENNIA XTR;ANTIEMBACANTE;PC", codigo: "30005336", embalagem: "PC" },
+ { categoria: "EPI", descricao: "OCULOS SEG;INCOLORPOLICARBONATO;PROTCAP", codigo: "30032186", embalagem: "PC" }, 
+ { categoria: "EPI", descricao: "MASCARA FACIAL M PANORAMA 3M", codigo: "30033455", embalagem: "PC" },
+ { categoria: "EPI", descricao: "PROTETOR AURICULAR PLUG SIAZ-AM (M)", codigo: "30080623", embalagem: "PC" },
+ { categoria: "EPI", descricao: "PROTETOR AURICULAR PLUG SIVD/AM (P)", codigo: "30080625", embalagem: "PC" },
+ { categoria: "EPI", descricao: "PROTETOR AURICULAR PLUG SIVM-AM (G)", codigo: "30080620", embalagem: "PC" },
+{ categoria: "ESCRITORIO", descricao: "FITA ADES CREP 48MM CR 40M24UN", codigo: "30055050", embalagem: "RL" },
+{ categoria: "ESCRITORIO", descricao: "FITA ADES DUREX PET 50MM TR100M", codigo: "30054394", embalagem: "RL" },
+{ categoria: "ESCRITORIO", descricao: "FITA ADES CREP 48MM CR 40M24UN", codigo: "30000024", embalagem: "RL" },
+ { categoria: "ESCRITORIO", descricao: "FITA P/ISOLAMENTO;INTERDITADO;", codigo: "30013965", embalagem: "RL" },
+ { categoria: "ESCRITORIO", descricao: "PAPEL SULFITE A4 75G/M2 BR500FLS;", codigo: "30005671", embalagem: "RL" },
+
+];
+
+
+const container = document.getElementById("materialsContainer");
+const cartItems = document.getElementById("cartItems");
+let cart = [];
+
+function displayMaterials(items) {
+  container.innerHTML = "";
+  items.forEach(item => {
+    const card = document.createElement("div");
+    card.classList.add("card", "fadeIn");
+    card.innerHTML = `
+      <div class="categoria">🗂 ${item.categoria}</div>
+      <div class="descricao">📦 ${item.descricao}</div>
+      <div class="codigo">Código: ${item.codigo}</div>
+      <div class="embalagem">Embalagem: ${item.embalagem}</div>
+      <div class="quant-container">
+        <input type="number" min="1" value="1" id="qty-${item.codigo}">
+        <button onclick="addToCart('${item.codigo}')">➕ Adicionar</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function addToCart(codigo) {
+  const material = materials.find(m => m.codigo === codigo);
+  const qty = parseInt(document.getElementById(`qty-${codigo}`).value);
+  const existing = cart.find(i => i.codigo === codigo);
+  if (existing) existing.quantidade += qty;
+  else cart.push({ ...material, quantidade: qty });
+  displayCart();
+}
+
+function removeFromCart(codigo) {
+  cart = cart.filter(i => i.codigo !== codigo);
+  displayCart();
+}
+
+function displayCart() {
+  cartItems.innerHTML = "";
+  cart.forEach(item => {
+    const div = document.createElement("div");
+    div.classList.add("cart-item", "fadeIn");
+    div.innerHTML = `
+      <div>🛒 ${item.descricao} (x${item.quantidade})</div>
+      <div>
+        <button onclick="removeFromCart('${item.codigo}')">❌ Excluir</button>
+      </div>
+    `;
+    cartItems.appendChild(div);
+  });
+}
+
+document.getElementById("searchBox").addEventListener("input", e => {
+  const search = e.target.value.toLowerCase();
+  const filtered = materials.filter(item =>
+    item.descricao.toLowerCase().includes(search) ||
+    item.codigo.includes(search)
+  );
+  displayMaterials(filtered);
+});
+document.getElementById("copyCodes").addEventListener("click", () => {
+  // Copia código + quantidade em colunas separadas
+  const codesWithQty = cart.map(item => `${item.codigo}\t${item.quantidade}`).join("\n");
+  navigator.clipboard.writeText(codesWithQty)
+    .then(() => alert("Códigos e quantidades copiados em colunas!"));
+});
+
+
+
+displayMaterials(materials);
+</script>
+</body><script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('SW registrado:', reg))
+      .catch(err => console.log('Erro SW:', err));
+  });
+}
+</script>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
