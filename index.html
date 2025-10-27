@@ -92,7 +92,7 @@
   .codigo, .embalagem { font-size:0.9em; color:#666; }
 
   .quant-container { margin-top:10px; display:flex; gap:10px; align-items:center; }
-  .quant-container input { width:60px; padding:5px; border:1px solid #ccc; border-radius:5px; text-align:center; transition:0.3s; }
+  .quant-container input { width:60px; padding:5px; border:1px solid #ffffff; border-radius:5px; text-align:center; transition:0.3s; }
   .quant-container input:focus { border-color:#fdffff; box-shadow:0 0 8px rgba(0,183,215,0.4); }
   .quant-container button {
     padding:5px 10px; border:none; border-radius:5px;
@@ -251,15 +251,27 @@ function displayCart() {
     cartItems.appendChild(div);
   });
 }
-
 document.getElementById("searchBox").addEventListener("input", e => {
   const search = e.target.value.toLowerCase();
   const filtered = materials.filter(item =>
     item.descricao.toLowerCase().includes(search) ||
     item.codigo.includes(search)
   );
-  displayMaterials(filtered);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<p style="font-weight:bold; color:#cff0000; margin:20px;">
+      Perdão.
+      Ainda não temos esse material no nosso site. 
+      Peço que por gentileza entre em contato no Teams: <strong>murilo mamede</strong> 
+      ou no Outlook: <strong>murilo.pereira@cebrace.com
+      Agradeço a compreensão</strong>
+    </p>`;
+  } else {
+    displayMaterials(filtered);
+  }
 });
+
+
 document.getElementById("copyCodes").addEventListener("click", () => {
   // Copia código + quantidade em colunas separadas
   const codesWithQty = cart.map(item => `${item.codigo}\t${item.quantidade}`).join("\n");
@@ -285,3 +297,4 @@ if ('serviceWorker' in navigator) {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
