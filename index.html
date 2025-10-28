@@ -1,144 +1,386 @@
-<head> <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4CAF50">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lista de Materiais SAP - Cebrace</title>
-<style>
-  body, html {
-    margin:0;
-    padding:0;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background:#f0f4f8;
-  }
-  * { box-sizing:border-box; }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cebrace | Sistema de Reserva de Materiais - Neon Corporate</title>
+    <style>
+        /* ============================ */
+        /* VARIÁVEIS DE ESTILO (Neon Theme) */
+        /* ============================ */
+        :root {
+            --cor-fundo-dark: #12121e; /* Fundo Ultra Escuro */
+            --cor-card-dark: #1c1c2b; /* Fundo de Painéis e Cards */
+            --cor-primaria: #007bff; /* Azul de Acento */
+            --cor-neon: #00eaff; /* Ciano Neon para Destaque (Ações e Ícones) */
+            --cor-alerta: #ffb700; /* Amarelo Laranja para Copiar */
+            --cor-perigo: #ff3860; /* Vermelho Neon */
+            --cor-texto-claro: #f4f4f9;
+            --cor-texto-suave: #a0a0b8;
+            --sombra-neon: 0 0 10px rgba(0, 234, 255, 0.4);
+            --sombra-card: 0 8px 25px rgba(0, 0, 0, 0.3);
+            --transicao-rapida: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-  header {
-    background: linear-gradient(90deg,#227777,#2d6fe9);
-    color:#ffffff;
-    text-align:center;
-    padding:25px 0;
-    font-size:2em;
-    font-weight:bold;
-    letter-spacing:1px;
-    box-shadow:0 4px 10px rgb(255, 255, 255);
-    animation: headerFade 1s ease-in-out;
-  }
-  @keyframes headerFade { from{opacity:0} to{opacity:1} }
+        /* ============================ */
+        /* LAYOUT GERAL E ESTRUTURA */
+        /* ============================ */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cor-fundo-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--cor-texto-claro);
+            padding-bottom: 40px;
+        }
+        header {
+            background-color: #0d0d16;
+            color: var(--cor-neon);
+            /* REDUÇÃO DO ESPAÇAMENTO DO HEADER (DE 30PX PARA 15PX) */
+            padding: 15px 0; 
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            /* REDUÇÃO DA MARGEM ABAIXO DO HEADER (DE 30PX PARA 20PX) */
+            margin-bottom: 20px; 
+            font-size: 1.6em;
+            font-weight: 800;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--cor-neon);
+        }
+        main {
+            display: grid;
+            grid-template-columns: 1fr 380px; /* Conteúdo principal e carrinho largo */
+            width: 95%;
+            max-width: 1500px;
+            /* REMOÇÃO DA MARGEM QUE ESTAVA 'EMPURRANDO' PARA BAIXO */
+            gap: 30px; 
+            flex-grow: 1;
+        }
+        
+        /* Estilo para Painéis Escuros */
+        #contentWrapper, #cartSection {
+            padding: 30px;
+            background-color: var(--cor-card-dark);
+            border-radius: 18px; 
+            box-shadow: var(--sombra-card);
+            /* RECALCULA A ALTURA MÁXIMA PARA APROVEITAR MAIS ESPAÇO */
+            max-height: calc(100vh - 80px); 
+            overflow-y: auto; 
+            transition: var(--transicao-rapida);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-  .search-container {
-    display:flex;
-    justify-content:center;
-    margin:20px;
-  }
-  input[type="text"] {
-    width:70%;
-    padding:12px 20px;
-    font-size:1em;
-    border:2px solid #ffffff;
-    border-radius:10px;
-    outline:none;
-    transition:0.3s;
-  }
-  input[type="text"]:focus { box-shadow:0 0 15px rgba(0,183,215,0.6); }
+        #contentWrapper { grid-column: 1; }
+        #cartSection { grid-column: 2; }
 
-  .main-container {
-    display:flex;
-    gap:20px;
-    padding:0 30px 50px;
-    align-items: flex-start;
-  }
+        h2 {
+            color: var(--cor-neon);
+            margin-top: 0;
+            border-bottom: 3px solid var(--cor-neon);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 1.5em;
+            text-shadow: 0 0 5px rgba(0, 234, 255, 0.3); /* Efeito Neon Sutil */
+        }
 
-  .left-panel {
-    flex: 3;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
+        /* ============================ */
+        /* BUSCA E FILTROS */
+        /* ============================ */
+        #searchBox {
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 30px;
+            border: 2px solid var(--cor-texto-suave);
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 1.15em;
+            background-color: #2a2a3e; /* Fundo de input */
+            color: var(--cor-texto-claro);
+            transition: var(--transicao-rapida);
+        }
+        #searchBox:focus {
+            border-color: var(--cor-neon);
+            box-shadow: var(--sombra-neon);
+            outline: none;
+        }
+        .info-panel {
+            font-size: 0.95em;
+            color: var(--cor-texto-suave);
+            border-left: 5px solid var(--cor-alerta);
+            padding: 15px 20px;
+            background-color: #33334d;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-weight: 600; 
+        }
 
-  .right-panel {
-    flex: 1;
-    max-height: 80vh;
-    overflow-y: auto;
-    background:#ff9102;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgb(255, 255, 255);
-  }
+        /* ============================ */
+        /* CARDS DE MATERIAIS */
+        /* ============================ */
+        #materialsContainer {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding-top: 20px;
+        }
+        .card {
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--sombra-card);
+            background-color: #252538; /* Card um pouco mais claro que o painel */
+            transition: var(--transicao-rapida);
+            border: 1px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--sombra-neon);
+            border: 1px solid var(--cor-neon);
+        }
+        .card .categoria {
+            font-size: 1em;
+            color: var(--cor-neon);
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .card .descricao {
+            font-weight: 800;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: var(--cor-texto-claro); 
+            text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+        .card .codigo, .card .embalagem {
+            font-size: 0.95em;
+            color: var(--cor-texto-suave);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .card .quant-container {
+            display: flex;
+            margin-top: 25px;
+            gap: 10px;
+            align-items: center;
+        }
+        .card input[type="number"] {
+            width: 75px;
+            padding: 14px 5px;
+            border: 2px solid var(--cor-texto-suave);
+            border-radius: 10px;
+            font-size: 1.1em;
+            background-color: #33334d;
+            color: var(--cor-texto-claro);
+            text-align: center;
+        }
+        .card button {
+            background-color: var(--cor-neon);
+            color: var(--cor-fundo-dark);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            flex-grow: 1;
+            font-weight: 700;
+            box-shadow: 0 4px 0px #00a0b8; 
+            transition: var(--transicao-rapida);
+        }
+        .card button:hover {
+            background-color: #00a0b8;
+            box-shadow: 0 0 15px var(--cor-neon);
+        }
+        .card button:active {
+            box-shadow: 0 0 0px #00a0b8;
+            transform: translateY(4px);
+        }
 
-  .materials-container {
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:20px;
-  }
+        /* Ícones SVG */
+        .card .categoria svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: var(--cor-neon);
+            stroke-width: 2.5;
+        }
+        
+        /* ============================ */
+        /* CARRINHO E AÇÕES */
+        /* ============================ */
+        #cartItems {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #2a2a3e; /* Fundo do list item */
+            border-radius: 15px;
+            max-height: 480px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            font-size: 1.05em;
+        }
+        .cart-item div:first-child {
+            font-weight: 600;
+        }
+        .cart-item button {
+            background-color: var(--cor-perigo);
+            color: var(--cor-texto-claro);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            box-shadow: 0 3px 0px #c52c4a; 
+            transition: var(--transicao-rapida);
+        }
+        .cart-item button:hover {
+            box-shadow: 0 0 10px var(--cor-perigo);
+        }
+        .cart-item button:active {
+            box-shadow: 0 0 0px #c52c4a;
+            transform: translateY(3px);
+        }
+        #copyCodes {
+            padding: 20px;
+            background-color: var(--cor-alerta);
+            color: var(--cor-fundo-dark);
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.3em;
+            box-shadow: 0 6px 0px #e69d00; 
+            transition: var(--transicao-rapida);
+        }
+        #copyCodes:hover {
+            box-shadow: 0 0 15px var(--cor-alerta);
+            background-color: #e69d00;
+        }
+        #copyCodes:active {
+            box-shadow: 0 0 0px #e69d00;
+            transform: translateY(6px);
+        }
+        .contact-info {
+            font-size: 0.8em;
+            color: var(--cor-texto-suave);
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
 
-  .card {
-    background:#ffffff;
-    border-radius:15px;
-    padding:15px;
-    box-shadow:0 4px 15px rgb(255, 254, 254);
-    transition: transform 0.4s, box-shadow 0.4s;
-    cursor:pointer;
-    position:relative;
-    display:flex;
-    flex-direction: column;
-    gap:5px;
-  }
-  .card:hover {
-    transform: translateY(-5px) rotateZ(1deg);
-    box-shadow:0 12px 25px rgb(255, 255, 255);
-  }
-
-  .categoria { font-weight:bold; color:#005f6b; font-size:0.95em; display:flex; align-items:center; gap:5px; }
-  .descricao { font-size:1em; margin:5px 0; color:#333; font-weight:600; display:flex; align-items:center; gap:5px; }
-  .codigo, .embalagem { font-size:0.9em; color:#666; }
-
-  .quant-container { margin-top:10px; display:flex; gap:10px; align-items:center; }
-  .quant-container input { width:60px; padding:5px; border:1px solid #ffffff; border-radius:5px; text-align:center; transition:0.3s; }
-  .quant-container input:focus { border-color:#fdffff; box-shadow:0 0 8px rgba(0,183,215,0.4); }
-  .quant-container button {
-    padding:5px 10px; border:none; border-radius:5px;
-    background:#00b7d7; color:#fff; cursor:pointer;
-    transition:0.3s;
-  }
-  .quant-container button:hover { background:#005f6b; transform: scale(1.1); }
-
-  .cart-item {
-    display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;
-    padding:10px; border-radius:10px; background:linear-gradient(90deg,#e0f7fa,#ffffff);
-    transition:0.4s;
-  }
-  .cart-item:hover { transform: scale(1.02); box-shadow:0 4px 15px rgba(0,0,0,0.2); }
-  .cart-item button { padding:3px 8px; border:none; border-radius:5px; background:#ff4d4d; color:#fff; cursor:pointer; transition:0.3s; }
-  .cart-item button:hover { background:#c00000; transform: scale(1.1); }
-
-  .fadeIn { animation: fadeIn 0.5s ease-in-out; }
-  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-  svg { width:16px; height:16px; vertical-align:middle; }
-</style>
+        /* ============================ */
+        /* TOAST NOTIFICATION */
+        /* ============================ */
+        #toastNotification {
+            background-color: var(--cor-neon);
+            color: var(--cor-fundo-dark);
+            bottom: 40px;
+            padding: 20px 40px;
+            box-shadow: 0 10px 30px var(--cor-neon);
+            font-size: 1.3em;
+            font-weight: 700;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            visibility: hidden;
+            z-index: 2000;
+        }
+        .toast-visible {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* ============================ */
+        /* RESPONSIVIDADE */
+        /* ============================ */
+        @media (max-width: 1000px) {
+            main {
+                grid-template-columns: 1fr; 
+                width: 90%;
+            }
+            #contentWrapper {
+                grid-column: 1;
+                max-height: none;
+            }
+            #cartSection {
+                grid-column: 1;
+                max-height: none;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>Lista de Materiais SAP </header>
+    <div id="toastNotification">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 30px; height: 30px; stroke: var(--cor-fundo-dark); stroke-width: 3;">
+            <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Dados copiados! Cole no sistema.</span>
+    </div>
 
-<div class="search-container">
-  <input type="text" id="searchBox" placeholder="Buscar material ou código...">
-</div>
+    <header>SISTEMA DE RESERVA DE MATERIAIS</h1>
+    </header>
 
-<div class="main-container">
-  <div class="left-panel">
-    <div class="materials-container" id="materialsContainer"></div>
-  </div>
+    <main>
+        
+        <section id="contentWrapper">
+            
+            <input type="text" id="searchBox" placeholder="Digite o código, a descrição ou a categoria (Ex: COPA)">
 
-  <div class="right-panel">
-    <h2>Itens Selecionados</h2>
-    <div id="cartItems"></div>
-    <button id="copyCodes" style="margin-top:10px;padding:10px 20px;border:none;border-radius:8px;background:#00b7d7;color:#fff;cursor:pointer; transition:0.3s;">📋 Copiar Códigos</button>
-  </div>
-</div>
+            <h2>📦 Materiais Encontrados</h2>
+            
+            <div class="info-panel">
+                <p><strong>Atenção:</strong> Filtre acima para carregar os resultados. A quantidade padrão para adição é 1.</p>
+            </div>
 
-<script>
-const materials = [
-  { categoria: "COPA", descricao: "COPO DESCARTÁVEL CAFÉ 50ML", codigo: "30023432", embalagem: "CT" },
+            <div id="materialsContainer">
+                
+                <p style="text-align: center; color: var(--cor-texto-suave); margin-top: 80px; font-style: italic; padding: 20px; font-size: 1.2em;">
+                    Use a barra de busca acima para encontrar os materiais.
+                </p>
+            </div>
+        </section>
+
+        
+        <section id="cartSection">
+            <h2>📝 Meu Carrinho de Pedidos</h2>
+            <div id="cartItems">
+                <p style="text-align: center; color: var(--cor-texto-suave); font-style: italic; padding: 10px;">Nenhum item adicionado.</p>
+            </div>
+            <button id="copyCodes">⭐ COPIAR CÓDIGOS E QUANTIDADES</button>
+            <div class="contact-info">
+                <p>* Os dados são salvos automaticamente no seu navegador. Feche sem preocupação.</p>
+                <p>Em caso de dúvidas, contate: <strong>Murilo Pereira (Teams/Outlook)</strong></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // =======================================================
+        // 🚨 SCRIPT JAVASCRIPT - CÓDIGO DO SISTEMA
+        // =======================================================
+
+        const materials = [
+            // Seus materiais iniciais
+      
+              { categoria: "COPA", descricao: "COPO DESCARTÁVEL CAFÉ 50ML", codigo: "30023432", embalagem: "CT" },
   { categoria: "COPA", descricao: "COPO DESCARTÁVEL ÁGUA 180ML", codigo: "30023433", embalagem: "CT" },
   { categoria: "COPA", descricao: "ESPÁTULA DESCARTÁVEL P/ CAFÉ", codigo: "30005863", embalagem: "MI" },
  { categoria: "COPA", descricao: "AÇUCAR REFINADO 1KG", codigo: "30027525", embalagem: "KG" },
@@ -310,108 +552,151 @@ const materials = [
 { categoria: "UNIFORME", descricao: "CINTO UNIFORME FASOLO G007143", codigo: "30005408", embalagem: "UN" },
 { categoria: "UNIFORME", descricao: "MEIA PRETA CODIGO 1750 - LUPO FINA", codigo: "30005402", embalagem: "PAR" },
 { categoria: "UNIFORME", descricao: "MEIA PRETA CODIGO 3240 - LUPO GROSSA", codigo: "30005403", embalagem: "PAR" },
-]
+            // ADICIONE SEUS PRÓXIMOS MATERIAIS AQUI
+        ]; 
 
+        // Mapeamento de ícones SVG por categoria 
+        const categoryIcons = {
+            "COPA": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10a7 7 0 0114 0v3a7 7 0 01-14 0v-3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12h-2"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2"></path></svg>`, 
+            "LIMPEZA": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14v5a2 2 0 01-2 2H7a2 2 0 01-2-2v-5m14 0V9a2 2 0 00-2-2H7a2 2 0 00-2 2v5m14 0h-4M5 14h4"></path></svg>`, 
+            "EPI": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M12 12l2-2m-4 0l-2 2m8-8V5a2 2 0 00-2-2H6a2 2 0 00-2 2v4a2 2 0 002 2h8a2 2 0 002-2v-2z"></path></svg>`, 
+            "ESCRITORIO": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13H5M12 21H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v7M17 17l-2 2m0 0l-2-2m2 2V13"></path></svg>`, 
+            "FERRAMENTAS": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10l-9.25 9.25a1 1 0 000 1.414l.707.707a1 1 0 001.414 0L17 12m-3-2l.707-.707a2 2 0 012.828 0l2.828 2.828a2 2 0 010 2.828L19 19m-3-9l-2.828 2.828"></path></svg>`, 
+            "UNIFORME": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10 21v-4a2 2 0 012-2h0a2 2 0 012 2v4m3 0H7m10 0a2 2 0 002-2v-3.586a1 1 0 00-.293-.707l-4.586-4.586A1 1 0 005 15.414V19a2 2 0 002 2h3m7 0h3"></path></svg>`, 
+            "DEFAULT": `<svg viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
+        };
 
+        let cart = JSON.parse(localStorage.getItem('cebraceCart')) || []; 
 
-const container = document.getElementById("materialsContainer");
-const cartItems = document.getElementById("cartItems");
-let cart = [];
+        const materialsContainer = document.getElementById("materialsContainer");
+        const cartItems = document.getElementById("cartItems");
 
-function displayMaterials(items) {
-  container.innerHTML = "";
-  items.forEach(item => {
-    const card = document.createElement("div");
-    card.classList.add("card", "fadeIn");
-    card.innerHTML = `
-      <div class="categoria">🗂 ${item.categoria}</div>
-      <div class="descricao">📦 ${item.descricao}</div>
-      <div class="codigo">Código: ${item.codigo}</div>
-      <div class="embalagem">Embalagem: ${item.embalagem}</div>
-      <div class="quant-container">
-        <input type="number" min="1" value="1" id="qty-${item.codigo}">
-        <button onclick="addToCart('${item.codigo}')">➕ Adicionar</button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
+        // FUNÇÕES DE UTILIDADE
+        function saveCart() {
+            localStorage.setItem('cebraceCart', JSON.stringify(cart));
+        }
 
-function addToCart(codigo) {
-  const material = materials.find(m => m.codigo === codigo);
-  const qty = parseInt(document.getElementById(`qty-${codigo}`).value);
-  const existing = cart.find(i => i.codigo === codigo);
-  if (existing) existing.quantidade += qty;
-  else cart.push({ ...material, quantidade: qty });
-  displayCart();
-}
+        function showToast() {
+            const toast = document.getElementById("toastNotification");
+            toast.classList.add("toast-visible");
+            setTimeout(() => {
+                toast.classList.remove("toast-visible");
+            }, 3000); 
+        }
 
-function removeFromCart(codigo) {
-  cart = cart.filter(i => i.codigo !== codigo);
-  displayCart();
-}
+        // FUNÇÃO PRINCIPAL: EXIBIR MATERIAIS
+        function displayMaterials(items) {
+            materialsContainer.innerHTML = "";
+            
+            if (items.length === 0) {
+                 // AJUSTE PARA CENTRALIZAR A MENSAGEM DE ERRO
+                 materialsContainer.style.display = 'flex';
+                 materialsContainer.style.justifyContent = 'center';
+                 materialsContainer.style.alignItems = 'center';
+                 materialsContainer.style.height = '300px'; 
+                 
+                 materialsContainer.innerHTML = `<p style="text-align: center; color: var(--cor-perigo); font-weight: 600; padding: 20px; font-size: 1.2em;">
+                    Nenhum material encontrado. Verifique os termos da sua busca.
+                </p>`;
+                return;
+            }
+            
+            // Retorna ao display grid normal se houver itens
+            materialsContainer.style.display = 'grid';
+            materialsContainer.style.justifyContent = 'initial';
+            materialsContainer.style.alignItems = 'initial';
+            materialsContainer.style.height = 'auto';
 
-function displayCart() {
-  cartItems.innerHTML = "";
-  cart.forEach(item => {
-    const div = document.createElement("div");
-    div.classList.add("cart-item", "fadeIn");
-    div.innerHTML = `
-      <div>🛒 ${item.descricao} (x${item.quantidade})</div>
-      <div>
-        <button onclick="removeFromCart('${item.codigo}')">❌ Excluir</button>
-      </div>
-    `;
-    cartItems.appendChild(div);
-  });
-}
-document.getElementById("searchBox").addEventListener("input", e => {
-  const search = e.target.value.toLowerCase();
-  const filtered = materials.filter(item =>
-    item.descricao.toLowerCase().includes(search) ||
-    item.codigo.includes(search)
-  );
+            items.forEach(item => {
+                const iconSvg = categoryIcons[item.categoria] || categoryIcons["DEFAULT"];
+                
+                const card = document.createElement("div");
+                card.classList.add("card", "fadeIn");
+                card.innerHTML = `
+                    <div class="categoria">${iconSvg} ${item.categoria}</div>
+                    <div class="descricao">${item.descricao}</div>
+                    <div class="codigo">CÓDIGO: ${item.codigo}</div>
+                    <div class="embalagem">EMBALAGEM: ${item.embalagem}</div>
+                    <div class="quant-container">
+                        <input type="number" min="1" value="1" id="qty-${item.codigo}">
+                        <button onclick="addToCart('${item.codigo}')">ADICIONAR</button>
+                    </div>
+                `;
+                materialsContainer.appendChild(card);
+            });
+        }
 
-  if (filtered.length === 0) {
-    container.innerHTML = `<p style="font-weight:bold; color:#cff0000; margin:20px;">
-      Perdão,ainda não temos esse material no nosso site. 
-      Peço que por gentileza entre em contato no Teams: <strong>Murilo Mamede</strong> 
-      ou no Outlook: <strong>Murilo.pereira@cebrace.com.br 
-        Agradeço a compreensão (se possivel mandar novos materiais.</strong>
-    </p>`;
-  } else {
-    displayMaterials(filtered);
-  }
-});
+        // FUNÇÕES DO CARRINHO
+        function addToCart(codigo) {
+            const material = materials.find(m => m.codigo === codigo);
+            const qtyInput = document.getElementById(`qty-${codigo}`);
+            const qty = Math.max(1, parseInt(qtyInput.value || 1));
+            
+            const existing = cart.find(i => i.codigo === codigo);
+            if (existing) existing.quantidade += qty;
+            else cart.push({ ...material, quantidade: qty });
+            
+            saveCart();
+            displayCart();
+        }
 
+        function removeFromCart(codigo) {
+            cart = cart.filter(i => i.codigo !== codigo);
+            saveCart();
+            displayCart();
+        }
 
-document.getElementById("copyCodes").addEventListener("click", () => {
-  // Copia código + quantidade em colunas separadas
-  const codesWithQty = cart.map(item => `${item.codigo}\t${item.quantidade}`).join("\n");
-  navigator.clipboard.writeText(codesWithQty)
-    .then(() => alert("Códigos e quantidades copiados!"));
-});
+        function displayCart() {
+            cartItems.innerHTML = "";
+            if (cart.length === 0) {
+                 cartItems.innerHTML = `<p style="text-align: center; color: var(--cor-texto-suave); font-style: italic; padding: 10px;">Nenhum item adicionado.</p>`;
+                 return;
+            }
 
+            cart.forEach(item => {
+                const div = document.createElement("div");
+                div.classList.add("cart-item", "fadeIn");
+                div.innerHTML = `
+                    <div><span style="color: var(--cor-neon); font-weight: 700;">${item.codigo}</span> - ${item.descricao} <span style="font-weight: 700; color: var(--cor-texto-claro);">(x${item.quantidade})</span></div>
+                    <div>
+                        <button onclick="removeFromCart('${item.codigo}')">X</button>
+                    </div>
+                `;
+                cartItems.appendChild(div);
+            });
+        }
 
+        // EVENTOS
+        document.getElementById("searchBox").addEventListener("input", e => {
+            const search = e.target.value.toLowerCase();
+            const filtered = materials.filter(item =>
+                item.descricao.toLowerCase().includes(search) ||
+                item.codigo.includes(search) ||
+                item.categoria.toLowerCase().includes(search)
+            );
+            displayMaterials(filtered);
+        });
 
-displayMaterials(materials);
-</script>
-</body><script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('SW registrado:', reg))
-      .catch(err => console.log('Erro SW:', err));
-  });
-}
-</script>
+        document.getElementById("copyCodes").addEventListener("click", () => {
+            if (cart.length === 0) {
+                alert("O carrinho está vazio. Adicione itens antes de copiar.");
+                return;
+            }
 
+            const codesWithQty = cart.map(item => `${item.codigo}\t${item.quantidade}`).join("\n");
+            
+            navigator.clipboard.writeText(codesWithQty)
+                .then(() => {
+                    showToast();
+                })
+                .catch(err => {
+                    console.error('Erro ao copiar:', err);
+                    alert("Erro ao copiar os códigos. Tente novamente.");
+                });
+        });
+
+        // INICIALIZAÇÃO
+        displayCart(); 
+    </script>
+</body>
 </html>
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-
-
-
-
