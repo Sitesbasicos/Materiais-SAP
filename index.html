@@ -3,28 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cebrace | Sistema de Reserva de Materiais - Neon Corporate</title>
+    <title>Cebrace | Sistema de Reserva de Materiais - Corporate</title>
     <style>
-        /* ============================ */
-        /* VARIÁVEIS DE ESTILO (Neon Theme) */
-        /* ============================ */
-        :root {
-            --cor-fundo-dark: #12121e; /* Fundo Ultra Escuro */
-            --cor-card-dark: #1c1c2b; /* Fundo de Painéis e Cards */
-            --cor-primaria: #007bff; /* Azul de Acento */
-            --cor-neon: #00eaff; /* Ciano Neon para Destaque (Ações e Ícones) */
-            --cor-alerta: #ffb700; /* Amarelo Laranja para Copiar */
-            --cor-perigo: #ff3860; /* Vermelho Neon */
-            --cor-texto-claro: #f4f4f9;
-            --cor-texto-suave: #a0a0b8;
-            --sombra-neon: 0 0 10px rgba(0, 234, 255, 0.4);
-            --sombra-card: 0 8px 25px rgba(0, 0, 0, 0.3);
-            --transicao-rapida: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+/*
+ * PALETA DE CORES NEON CIANO
+ */
+:root {
+  /* --- FUNDOS --- */
+  --cor-fundo-dark: #12121e;
+  --cor-card-dark: #1c1c2b;
 
-        /* ============================ */
-        /* LAYOUT GERAL E ESTRUTURA */
-        /* ============================ */
+  /* --- CORES PRINCIPAIS (Ciano Cebrace) --- */
+  --cor-primaria: #0089A0; 
+  --cor-neon: #0089A0;      
+
+  /* --- CORES DE FEEDBACK --- */
+  --cor-alerta: #28A745;    /* Botão COPIAR (VERDE) */
+  --cor-perigo: #DC3545;    /* Botões X de Remover (VERMELHO) */
+
+  /* --- TEXTOS --- */
+  --cor-texto-claro: #f4f4f9;
+  --cor-texto-suave: #a0a0b8;
+
+  /* --- EFEITOS --- */
+  --sombra-neon: 0 0 10px rgba(0, 137, 160, 0.4);
+  --sombra-card: 0 8px 25px rgba(0, 0, 0, 0.3);
+  --transicao-rapida: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+/* --- ESTILOS GERAIS --- */
         * {
             box-sizing: border-box;
         }
@@ -32,7 +38,20 @@
             font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--cor-fundo-dark);
+            
+            /* ================================================= */
+            /* FUNDO PRINCIPAL: PLACA DE CIRCUITO NEON COM COR VIBRANTE */
+            /* ================================================= */
+            background-color: #0c0c16; /* Cor base escura sutil */
+            background-image: url('https://otrainee.com.br/wp-content/uploads/2025/05/OTRAINEE-2025-05-21T112310.381.webp'); 
+            background-size: cover; 
+            background-attachment: fixed; 
+            background-position: center center;
+            background-blend-mode: normal; /* Remove a mistura forçada de cores escuras */
+            /* FILTRO PARA MÁXIMA COR: Aumenta brilho, contraste e dobra a saturação (200%) */
+            filter: brightness(0.9) contrast(1.3) saturate(200%); 
+            /* ================================================= */
+            
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -43,12 +62,10 @@
         header {
             background-color: #0d0d16;
             color: var(--cor-neon);
-            /* REDUÇÃO DO ESPAÇAMENTO DO HEADER (DE 30PX PARA 15PX) */
             padding: 15px 0; 
             width: 100%;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            /* REDUÇÃO DA MARGEM ABAIXO DO HEADER (DE 30PX PARA 20PX) */
             margin-bottom: 20px; 
             font-size: 1.6em;
             font-weight: 800;
@@ -57,10 +74,9 @@
         }
         main {
             display: grid;
-            grid-template-columns: 1fr 380px; /* Conteúdo principal e carrinho largo */
+            grid-template-columns: 1fr 380px; 
             width: 95%;
             max-width: 1500px;
-            /* REMOÇÃO DA MARGEM QUE ESTAVA 'EMPURRANDO' PARA BAIXO */
             gap: 30px; 
             flex-grow: 1;
         }
@@ -71,7 +87,6 @@
             background-color: var(--cor-card-dark);
             border-radius: 18px; 
             box-shadow: var(--sombra-card);
-            /* RECALCULA A ALTURA MÁXIMA PARA APROVEITAR MAIS ESPAÇO */
             max-height: calc(100vh - 80px); 
             overflow-y: auto; 
             transition: var(--transicao-rapida);
@@ -89,7 +104,7 @@
             margin-bottom: 30px;
             font-weight: 700;
             font-size: 1.5em;
-            text-shadow: 0 0 5px rgba(0, 234, 255, 0.3); /* Efeito Neon Sutil */
+            text-shadow: 0 0 5px rgba(0, 137, 160, 0.3); 
         }
 
         /* ============================ */
@@ -103,7 +118,7 @@
             border-radius: 12px;
             box-sizing: border-box;
             font-size: 1.15em;
-            background-color: #2a2a3e; /* Fundo de input */
+            background-color: #2a2a3e; 
             color: var(--cor-texto-claro);
             transition: var(--transicao-rapida);
         }
@@ -115,7 +130,7 @@
         .info-panel {
             font-size: 0.95em;
             color: var(--cor-texto-suave);
-            border-left: 5px solid var(--cor-alerta);
+            border-left: 5px solid var(--cor-alerta); 
             padding: 15px 20px;
             background-color: #33334d;
             border-radius: 8px;
@@ -136,7 +151,7 @@
             padding: 25px;
             border-radius: 15px;
             box-shadow: var(--sombra-card);
-            background-color: #252538; /* Card um pouco mais claro que o painel */
+            background-color: #252538; 
             transition: var(--transicao-rapida);
             border: 1px solid transparent;
         }
@@ -194,15 +209,15 @@
             cursor: pointer;
             flex-grow: 1;
             font-weight: 700;
-            box-shadow: 0 4px 0px #00a0b8; 
+            box-shadow: 0 4px 0px #007080; 
             transition: var(--transicao-rapida);
         }
         .card button:hover {
-            background-color: #00a0b8;
+            background-color: #007080;
             box-shadow: 0 0 15px var(--cor-neon);
         }
         .card button:active {
-            box-shadow: 0 0 0px #00a0b8;
+            box-shadow: 0 0 0px #007080;
             transform: translateY(4px);
         }
 
@@ -221,7 +236,7 @@
         #cartItems {
             margin-top: 15px;
             padding: 15px;
-            background-color: #2a2a3e; /* Fundo do list item */
+            background-color: #2a2a3e;
             border-radius: 15px;
             max-height: 480px;
             overflow-y: auto;
@@ -239,37 +254,37 @@
             font-weight: 600;
         }
         .cart-item button {
-            background-color: var(--cor-perigo);
+            background-color: var(--cor-perigo); 
             color: var(--cor-texto-claro);
             padding: 8px 15px;
             border-radius: 8px;
             font-size: 0.95em;
-            box-shadow: 0 3px 0px #c52c4a; 
+            box-shadow: 0 3px 0px #A02230; 
             transition: var(--transicao-rapida);
         }
         .cart-item button:hover {
             box-shadow: 0 0 10px var(--cor-perigo);
         }
         .cart-item button:active {
-            box-shadow: 0 0 0px #c52c4a;
+            box-shadow: 0 0 0px #A02230;
             transform: translateY(3px);
         }
         #copyCodes {
             padding: 20px;
-            background-color: var(--cor-alerta);
+            background-color: var(--cor-alerta); /* VERDE */
             color: var(--cor-fundo-dark);
             border-radius: 12px;
             font-weight: 800;
             font-size: 1.3em;
-            box-shadow: 0 6px 0px #e69d00; 
+            box-shadow: 0 6px 0px #1A7E33; /* Sombra Verde */
             transition: var(--transicao-rapida);
         }
         #copyCodes:hover {
             box-shadow: 0 0 15px var(--cor-alerta);
-            background-color: #e69d00;
+            background-color: #1A7E33;
         }
         #copyCodes:active {
-            box-shadow: 0 0 0px #e69d00;
+            box-shadow: 0 0 0px #1A7E33;
             transform: translateY(6px);
         }
         .contact-info {
@@ -282,6 +297,61 @@
         }
 
         /* ============================ */
+        /* ANIMAÇÃO DE ABERTURA (INTRO SCREEN) - FUNDO TIFFANY */
+        /* ============================ */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Fundo da Tiffany para a tela de abertura, com cor de fundo intensa */
+            background-image: url('https://www.casadevalentina.com.br/wp-content/uploads/2019/03/Joalheria-Tiffany_-Casa-Cor-Brasília-2018_-vidro-Cebrace-Extra-Clear-4.jpg.optimal.jpg'); 
+            background-size: cover; 
+            background-position: center center;
+            background-color: rgba(0, 0, 0, 0.5); /* Camada escura, mas com a cor da imagem visível */
+            background-blend-mode: multiply; 
+            filter: brightness(0.8) contrast(1.1); 
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 1.5s ease-out; 
+        }
+
+        .typing-container {
+            width: 90%;
+            max-width: 800px;
+        }
+
+        #typing-text {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            color: var(--cor-neon); 
+            font-size: 2.5em; 
+            font-weight: 800; 
+            letter-spacing: 2px; 
+            text-shadow: 0 0 15px rgba(0, 137, 160, 0.8), 0 0 25px rgba(0, 137, 160, 0.5); 
+            white-space: nowrap; 
+            overflow: hidden; 
+            margin: 0 auto;
+            
+            border-right: .2em solid var(--cor-neon); 
+            animation: 
+                blink-caret .75s step-end infinite;
+        }
+
+        /* Animação do cursor piscando */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--cor-neon); } 
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
+        /* ============================ */
         /* TOAST NOTIFICATION */
         /* ============================ */
         #toastNotification {
@@ -289,7 +359,7 @@
             color: var(--cor-fundo-dark);
             bottom: 40px;
             padding: 20px 40px;
-            box-shadow: 0 10px 30px var(--cor-neon);
+            box-shadow: 0 10px 30px var(--sombra-neon);
             font-size: 1.3em;
             font-weight: 700;
             position: fixed;
@@ -323,64 +393,131 @@
                 grid-column: 1;
                 max-height: none;
             }
+            #typing-text {
+                font-size: 1.5em; 
+            }
         }
     </style>
 </head>
 <body>
-
-    <div id="toastNotification">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 30px; height: 30px; stroke: var(--cor-fundo-dark); stroke-width: 3;">
-            <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Dados copiados! Cole no sistema.</span>
+    
+    <div id="intro-screen">
+        <div class="typing-container">
+            <h1 id="typing-text"></h1>
+        </div>
     </div>
+    
+    <div id="main-content" style="display: none; width: 100%; display: flex; flex-direction: column; align-items: center;">
 
-    <header>SISTEMA DE RESERVA DE MATERIAIS</h1>
-    </header>
+        <div id="toastNotification">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 30px; height: 30px; stroke: var(--cor-fundo-dark); stroke-width: 3;">
+                <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Dados copiados! Cole no sistema.</span>
+        </div>
 
-    <main>
-        
-        <section id="contentWrapper">
+        <header>SISTEMA DE RESERVA DE MATERIAIS</header>
+
+        <main>
             
-            <input type="text" id="searchBox" placeholder="Digite o código, a descrição ou a categoria (Ex: COPA)">
-
-            <h2>📦 Materiais Encontrados</h2>
-            
-            <div class="info-panel">
-                <p><strong>Atenção:</strong> Filtre acima para carregar os resultados. A quantidade padrão para adição é 1.</p>
-            </div>
-
-            <div id="materialsContainer">
+            <section id="contentWrapper">
                 
-                <p style="text-align: center; color: var(--cor-texto-suave); margin-top: 80px; font-style: italic; padding: 20px; font-size: 1.2em;">
-                    Use a barra de busca acima para encontrar os materiais.
-                </p>
-            </div>
-        </section>
+                <input type="text" id="searchBox" placeholder="Digite o código, a descrição ou a categoria (Ex: COPA)">
 
-        
-        <section id="cartSection">
-            <h2>📝 Meu Carrinho de Pedidos</h2>
-            <div id="cartItems">
-                <p style="text-align: center; color: var(--cor-texto-suave); font-style: italic; padding: 10px;">Nenhum item adicionado.</p>
-            </div>
-            <button id="copyCodes">⭐ COPIAR CÓDIGOS E QUANTIDADES</button>
-            <div class="contact-info">
-                <p>* Os dados são salvos automaticamente no seu navegador. Feche sem preocupação.</p>
-                <p>Em caso de dúvidas, contate: <strong>Murilo Pereira (Teams/Outlook)</strong></p>
-            </div>
-        </section>
-    </main>
+                <h2>📦 Materiais Encontrados</h2>
+                
+                <div class="info-panel">
+                    <p><strong>Atenção:</strong> Filtre acima para carregar os resultados. A quantidade padrão para adição é 1.</p>
+                </div>
 
-    <script>
+                <div id="materialsContainer">
+                    
+                    <p style="text-align: center; color: var(--cor-texto-suave); margin-top: 80px; font-style: italic; padding: 20px; font-size: 1.2em;">
+                        Use a barra de busca acima para encontrar os materiais.
+                    </p>
+                </div>
+            </section>
+
+            
+            <section id="cartSection">
+                <h2>📝 Meu Carrinho de Pedidos</h2>
+                <div id="cartItems">
+                    <p style="text-align: center; color: var(--cor-texto-suave); font-style: italic; padding: 10px;">Nenhum item adicionado.</p>
+                </div>
+                <button id="copyCodes">🐣 COPIAR CÓDIGOS E QUANTIDADES</button>
+                <div class="contact-info">
+                    <p>* Os dados são salvos automaticamente no seu navegador. Feche sem preocupação.</p>
+                    <p>Em caso de dúvidas, contate: <strong>Murilo Pereira (Teams/Outlook)</strong></p>
+                </div>
+            </section>
+        </main>
+    </div> <script>
+        // =======================================================
+        // 🚀 SCRIPT PARA ANIMAÇÃO DE ABERTURA (TYPEWRITER)
+        // =======================================================
+        function startIntroAnimation() {
+            const textElement = document.getElementById('typing-text');
+            const introScreen = document.getElementById('intro-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            const phrases = [
+                "Bem-vindo ao Materiais-Sap.",
+                "O que seu setor procura hoje?"
+            ];
+            let phraseIndex = 0;
+            let charIndex = 0;
+            const typingSpeed = 75; 
+            const delayBetweenPhrases = 1500; 
+
+            function type() {
+                if (phraseIndex < phrases.length) {
+                    const currentPhrase = phrases[phraseIndex];
+                    
+                    if (charIndex < currentPhrase.length) {
+                        textElement.textContent += currentPhrase.charAt(charIndex);
+                        charIndex++;
+                        setTimeout(type, typingSpeed);
+                    } else {
+                        phraseIndex++;
+                        charIndex = 0;
+                        
+                        if (phraseIndex < phrases.length) {
+                            setTimeout(() => {
+                                textElement.textContent = '';
+                                setTimeout(type, 50); 
+                            }, delayBetweenPhrases);
+                        } else {
+                            // Todas as frases digitadas, espera 2 segundos e fecha
+                            setTimeout(closeIntro, 2000); 
+                        }
+                    }
+                }
+            }
+
+            function closeIntro() {
+                // Remove o cursor
+                textElement.style.borderRight = 'none';
+
+                // Inicia o fade-out
+                introScreen.classList.add('fade-out');
+
+                // Esconde a tela de intro e exibe o conteúdo principal
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    mainContent.style.display = 'flex'; // Torna o conteúdo visível (usa flex para layout)
+                }, 1500); 
+            }
+
+            type(); // Inicia a animação
+        }
+
         // =======================================================
         // 🚨 SCRIPT JAVASCRIPT - CÓDIGO DO SISTEMA
         // =======================================================
 
         const materials = [
             // Seus materiais iniciais
-      
-              { categoria: "COPA", descricao: "COPO DESCARTÁVEL CAFÉ 50ML", codigo: "30023432", embalagem: "CT" },
+           { categoria: "COPA", descricao: "COPO DESCARTÁVEL CAFÉ 50ML", codigo: "30023432", embalagem: "CT" },
   { categoria: "COPA", descricao: "COPO DESCARTÁVEL ÁGUA 180ML", codigo: "30023433", embalagem: "CT" },
   { categoria: "COPA", descricao: "ESPÁTULA DESCARTÁVEL P/ CAFÉ", codigo: "30005863", embalagem: "MI" },
  { categoria: "COPA", descricao: "AÇUCAR REFINADO 1KG", codigo: "30027525", embalagem: "KG" },
@@ -561,7 +698,6 @@
 { categoria: "UNIFORME", descricao: "CINTO UNIFORME FASOLO G007143", codigo: "30005408", embalagem: "UN" },
 { categoria: "UNIFORME", descricao: "MEIA PRETA CODIGO 1750 - LUPO FINA", codigo: "30005402", embalagem: "PAR" },
 { categoria: "UNIFORME", descricao: "MEIA PRETA CODIGO 3240 - LUPO GROSSA", codigo: "30005403", embalagem: "PAR" },
-            // ADICIONE SEUS PRÓXIMOS MATERIAIS AQUI
         ]; 
 
         // Mapeamento de ícones SVG por categoria 
@@ -598,19 +734,17 @@
             materialsContainer.innerHTML = "";
             
             if (items.length === 0) {
-                 // AJUSTE PARA CENTRALIZAR A MENSAGEM DE ERRO
-                 materialsContainer.style.display = 'flex';
-                 materialsContainer.style.justifyContent = 'center';
-                 materialsContainer.style.alignItems = 'center';
-                 materialsContainer.style.height = '300px'; 
-                 
-                 materialsContainer.innerHTML = `<p style="text-align: center; color: var(--cor-perigo); font-weight: 600; padding: 20px; font-size: 1.2em;">
+                materialsContainer.style.display = 'flex';
+                materialsContainer.style.justifyContent = 'center';
+                materialsContainer.style.alignItems = 'center';
+                materialsContainer.style.height = '300px'; 
+                
+                materialsContainer.innerHTML = `<p style="text-align: center; color: var(--cor-perigo); font-weight: 600; padding: 20px; font-size: 1.2em;">
                     Nenhum material encontrado. Verifique os termos da sua busca.
                 </p>`;
                 return;
             }
             
-            // Retorna ao display grid normal se houver itens
             materialsContainer.style.display = 'grid';
             materialsContainer.style.justifyContent = 'initial';
             materialsContainer.style.alignItems = 'initial';
@@ -658,8 +792,8 @@
         function displayCart() {
             cartItems.innerHTML = "";
             if (cart.length === 0) {
-                 cartItems.innerHTML = `<p style="text-align: center; color: var(--cor-texto-suave); font-style: italic; padding: 10px;">Nenhum item adicionado.</p>`;
-                 return;
+                cartItems.innerHTML = `<p style="text-align: center; color: var(--cor-texto-suave); font-style: italic; padding: 10px;">Nenhum item adicionado.</p>`;
+                return;
             }
 
             cart.forEach(item => {
@@ -705,12 +839,11 @@
         });
 
         // INICIALIZAÇÃO
-        displayCart(); 
+        document.addEventListener('DOMContentLoaded', () => {
+             startIntroAnimation();
+             // Chame displayCart() apenas para carregar o estado do carrinho no início
+             displayCart(); 
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
